@@ -1,4 +1,3 @@
-/*
 const MORSE_TABLE = {
   '.-': 'a',
   '-...': 'b',
@@ -37,8 +36,26 @@ const MORSE_TABLE = {
   '----.': '9',
   '-----': '0',
 };
-*/
 
-module.exports = function decode(/* expr */) {
-  throw new Error('Not implemented');
+module.exports = function decode(expr) {
+  const CHUNK_SIZE = 10;
+  let decodedString = '';
+
+  for (let i = 0; i < expr.length; i += CHUNK_SIZE) {
+    const chunk = expr.slice(i, i + CHUNK_SIZE);
+
+    if (chunk === '**********') {
+      decodedString += ' ';
+    } else {
+      // Usuwamy wiodące zera, a następnie mapujemy 10 na kropkę i 11 na kreskę
+      const morseCode = chunk
+        .slice(chunk.indexOf('1')) // Znajduje początek faktycznych danych
+        .replace(/10/g, '.')
+        .replace(/11/g, '-');
+
+      decodedString += MORSE_TABLE[morseCode];
+    }
+  }
+
+  return decodedString;
 };
